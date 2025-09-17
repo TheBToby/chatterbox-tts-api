@@ -43,10 +43,15 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN uv pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu124
 
 # Install base dependencies first
-RUN uv pip install setuptools fastapi uvicorn[standard] python-dotenv python-multipart requests psutil pydub sse-starlette
+RUN uv pip install wheel --upgrade
+RUN uv pip install "setuptools>=61.0"
+RUN uv pip install "numpy>=1.24,<1.26"
+RUN uv pip install Cython
+RUN uv pip install fastapi uvicorn[standard] python-dotenv python-multipart requests psutil pydub sse-starlette
+RUN uv pip install --no-build-isolation "pkuseg==0.0.25"
 
-# Install chatterbox-tts — with the breaking fix (pkuseg package exclusion) 
-RUN uv pip install git+https://github.com/travisvn/chatterbox-multilingual.git@exp
+# Install chatterbox-tts — "faster-multi" fork
+RUN uv pip install git+https://github.com/rsxdalv/chatterbox.git@faster-multi
 
 # Copy application code
 COPY app/ ./app/
